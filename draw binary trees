@@ -1,0 +1,98 @@
+import java.util.ArrayList;
+
+/**
+ * Created by wangs on 2016/1/8.
+ */
+
+class TreeNode{
+    public int val;
+    public TreeNode left,right;
+    public TreeNode(int val) {
+        this.val = val;
+        this.left =this.right = null;
+    }
+}
+public class visualTreeNode {
+    public TreeNode visualTreeNode(String s) {
+        /*
+        前序遍历的方式
+         */
+        String[] arrays = s.split(",");
+        TreeNode start = new TreeNode(0);
+        ArrayList<String> lists = new ArrayList<String>();
+        for (String item:arrays){
+            lists.add(item);
+        }
+        start.left = helper(lists);
+        return start.left;
+
+
+    }
+    public TreeNode helper(ArrayList<String> arrays) {
+        if (arrays == null || arrays.size() == 0) {
+            return null;
+        }
+
+        String val = arrays.get(0);
+        arrays.remove(0);
+        if (val.equals("#")) {
+            return null;
+        }
+        TreeNode root = new TreeNode(Integer.parseInt(val));
+        root.left = helper(arrays);
+        root.right = helper(arrays);
+        return root;
+    }
+
+
+
+    public String print(TreeNode root) {
+        //第一种方法，这种方法是level print。举个例子
+        //                     1
+        //                    / \
+        //                   2   3
+        // 输出结果是"1,2,3,#,#,#,#"; 是一层层打印的
+        /*
+        if (root == null) {
+            return "";
+        }
+        String res = "";
+        Queue<TreeNode> queue = new LinkedList<TreeNode>();
+        queue.offer(root);
+        while(!queue.isEmpty()){
+            TreeNode first = queue.poll();
+            if (first == null) {
+                res += "#,";
+                continue;
+            }
+            else{
+                String s = first.val + ",";
+                res +=s;
+                queue.add(first.left);
+                queue.add(first.right);
+            }
+        }
+        return res;
+        */
+
+        // 第二种方法是前序遍历打印，和我们构成一个树的输入是一样一样的
+        String result = "";
+        if (root == null) {
+            return result += "#,";
+        }
+
+        String s = root.val + ",";
+        result += s;
+
+        result += print(root.left);
+        result += print(root.right);
+
+        return result;
+    }
+    public static void main(String[] args) {
+        String a = "1,2,#,#,3,#,#";
+        visualTreeNode vi = new visualTreeNode();
+        TreeNode res = vi.visualTreeNode(a);
+        System.out.println(vi.print(res));
+    }
+}
